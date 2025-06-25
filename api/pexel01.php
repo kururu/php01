@@ -37,10 +37,10 @@ function loadEnv($filePath)
 }
 
 // .env ファイルのパスを指定
-$envFilePath = __DIR__ . '/.env'; // スクリプトと同じディレクトリにある場合
+//$envFilePath = __DIR__ . '/.env'; // スクリプトと同じディレクトリにある場合
 
 // .env ファイルを読み込む
-loadEnv($envFilePath);
+//loadEnv($envFilePath);
 
 // 環境変数をechoする例
 //echo "--- .env file content (via getenv() or \$_ENV) ---\n";
