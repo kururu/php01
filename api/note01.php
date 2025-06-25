@@ -58,6 +58,10 @@ $data = [
 
 // JSON出力
 header('Content-Type: application/json; charset=utf-8');
-header('Access-Control-Allow-Origin: https://kururu.github.io, null');
+$origin = $_SERVER['HTTP_ORIGIN'] ?? '';
+
+if ($origin === 'null' || $origin === 'https://kururu.github.io') {
+    header("Access-Control-Allow-Origin: $origin");
+}
 echo json_encode($data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
 ?>
