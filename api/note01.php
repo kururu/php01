@@ -1,40 +1,62 @@
 <?php
-// RSSフィードのURL
-$rss_url = "https://note.com/kururu01/m/m417488290466/rss";
+$rssUrl = "https://note.com/kururu01/m/m417488290466/rss";
 
-// RSSを取得
-$rss_content = @file_get_contents($rss_url);
-
-// エラー処理
-if ($rss_content === false) {
+// RSSフィードを取得
+$rssContent = @file_get_contents($rssUrl);
+if ($rssContent === false) {
     header('Content-Type: application/json');
-    echo json_encode(['error' => 'RSS取得に失敗しました']);
+    echo json_encode(['error' => 'RSS読み込みに失敗しました']);
     exit;
 }
 
-// XMLをパース
-$xml = simplexml_load_string($rss_content);
-
-print_r($xml);
-
+// XMLを読み込む
+$xml = simplexml_load_string($rssContent);
 if (!$xml || !isset($xml->channel->item[0])) {
     header('Content-Type: application/json');
     echo json_encode(['error' => 'RSSの構造が不正です']);
     exit;
 }
 
-// 最新の記事を取得
-$latest = $xml->channel->item[0];
+$item = $xml->channel->item[0];
 
-// 必要な情報を抽出
+// 名前空間を取得（media, note用）
+$namespaces = $item->getNamespaces(true);
+
+// media:thumbnail
+$thumbnail = null;
+if (isset($namespaces['media'])) {
+    $media = $item->children($namespaces['media']);
+    if (isset($media->thumbnail)) {
+        $thumbnail = (string)$media->thumbnail;
+    }
+}
+
+// note:creatorImage と note:creatorName
+$creatorImage = null;
+$creatorName = null;
+if (isset($namespaces['note'])) {
+    $note = $item->children($namespaces['note']);
+    if (isset($note->creatorImage)) {
+        $creatorImage = (string)$note->creatorImage;
+    }
+    if (isset($note->creatorName)) {
+        $creatorName = (string)$note->creatorName;
+    }
+}
+
+// 結果を整形
 $data = [
-    'title'       => (string)$latest->title,
-    'link'        => (string)$latest->link,
-    'description' => (string)$latest->description,
-    'pubDate'     => (string)$latest->pubDate,
+    'title'         => (string)$item->title,
+    'thumbnail'     => $thumbnail,
+    'description'   => strip_tags((string)$item->description),
+    'creatorImage'  => $creatorImage,
+    'creatorName'   => $creatorName,
+    'pubDate'       => (string)$item->pubDate,
+    'link'          => (string)$item->link,
+    'guid'          => (string)$item->guid
 ];
 
-// JSONとして出力
+// JSON出力
 header('Content-Type: application/json; charset=utf-8');
 echo json_encode($data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
 ?>
