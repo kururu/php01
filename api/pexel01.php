@@ -46,37 +46,37 @@ function loadEnv($filePath)
 //echo "--- .env file content (via getenv() or \$_ENV) ---\n";
 //echo "PEXELS_API_KEY: " . getenv('PEXELS_API_KEY') . "\n";
 
-// APIキーを取得
+// APIキー取得
 $apiKey = getenv('PEXELS_API_KEY');
 
 $num = 50;
 $random_page = rand(1, 15);
 
-// APIエンドポイント
-$url = 'https://api.pexels.com/v1/curated?per_page='.$num.'&page='.$random_page;
+// API URL
+$url = 'https://api.pexels.com/v1/curated?per_page=' . $num . '&page=' . $random_page;
 
-// cURL 初期化
-$ch = curl_init($url);
+// HTTPヘッダー付きリクエストのためのコンテキスト作成
+$options = [
+    'http' => [
+        'method' => 'GET',
+        'header' => "Authorization: $apiKey\r\n"
+    ]
+];
 
-// cURL オプション設定
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch, CURLOPT_HTTPHEADER, [
-    'Authorization: ' . $apiKey
-]);
+$context = stream_context_create($options);
 
 // API呼び出し
-$response = curl_exec($ch);
+$response = @file_get_contents($url, false, $context);
 
-// エラーチェック
-if (curl_errno($ch)) {
-    echo 'エラー: ' . curl_error($ch);
-} else {
-    // JSONデコードして結果を表示
-    $data = json_decode($response, true);
-    //print_r($data);
+if ($response === FALSE) {
+    echo json_encode([
+        'error' => 'API request failed'
+    ]);
+    exit;
 }
 
-curl_close($ch);
+// レスポンスをJSONとしてデコード
+$data = json_decode($response, true);
 
 $result = [];
 
@@ -87,12 +87,10 @@ foreach ($data['photos'] as $photo) {
     ];
 }
 
-// JSON形式で出力
 header('Content-Type: application/json');
 
-$random_number = rand(0, ($num-1));
+$random_number = rand(0, ($num - 1));
 
-// 配列が空だった場合。
 if (!isset($result[$random_number])) {
     $result[$random_number] = [
         "photographer" => "@Jessie Garcia",
