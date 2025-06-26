@@ -12,6 +12,7 @@ if (!$text) {
 $getUrl = $apiUrl . '?text01=' . urlencode($text);
 $getResponse = file_get_contents($getUrl);
 
+/*
 // --- POST送信 ---
 $postData = json_encode(['text01' => $text]);
 $options = [
@@ -21,10 +22,11 @@ $options = [
         'content' => $postData,
     ],
 ];
+*/
 $context = stream_context_create($options);
 $postResponse = file_get_contents($apiUrl, false, $context);
 
 // 結果表示
 echo "GETレスポンス: " . $getResponse . "<br>";
-echo "POSTレスポンス: " . $postResponse;
+//echo "POSTレスポンス: " . $postResponse;
 ?>
