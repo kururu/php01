@@ -5,9 +5,11 @@ $apiUrl = 'https://script.google.com/macros/s/AKfycbz5RWCwhOyBHzTkKIdgK4shELo6wi
 // text01 を取得（GETまたはPOST）
 $text = $_GET['text01'] ?? $_POST['text01'] ?? null;
 
+/*
 if (!$text) {
     exit('text01 が指定されていません');
 }
+*/
 
 // --- GET送信 ---
 $getUrl = $apiUrl . '?text01=' . urlencode($text);
