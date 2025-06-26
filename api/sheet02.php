@@ -1,5 +1,6 @@
 <?php
-$apiUrl = 'https://script.google.com/macros/s/AKfycbwHQuWb2B53JrOPBLb4MvCZP-ue4GADjrKFGELeYrihOHo2yiW-DaxXmTCpbmEUU3XU/exec';
+$apiUrl = 'https://script.google.com/macros/s/AKfycbz5RWCwhOyBHzTkKIdgK4shELo6wiZIcdAzJK8iYehDzdMKsI3RNz3IO29729Td2LcH/exec';
+
 
 // text01 を取得（GETまたはPOST）
 $text = $_GET['text01'] ?? $_POST['text01'] ?? null;
