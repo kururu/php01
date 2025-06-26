@@ -10,6 +10,7 @@ if (!$text) {
     exit('text01 が指定されていません');
 }
 */
+$text = $_GET['text01'] ?? '';  // null 対策
 
 // --- GET送信 ---
 $getUrl = $apiUrl . '?text01=' . urlencode($text);
