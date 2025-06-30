@@ -64,8 +64,8 @@ function get_user_id($accessToken, $apiBaseUrl) {
 }
 
 // 実行例
-$userId = get_user_id($accessToken, $apiBaseUrl);
-echo "User ID: " . $userId;
+//$userId = get_user_id($accessToken, $apiBaseUrl);
+//echo "User ID: " . $userId;
 
 function get_latest_thread($accessToken, $apiBaseUrl) {
     $url = $apiBaseUrl . '/me/threads';
