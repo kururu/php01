@@ -25,7 +25,7 @@ function loadEnv($filePath) {
 
 $accessToken = getenv('ACCESS_TOKEN');
 
-echo $accessToken;
+//echo $accessToken;
 
 $apiBaseUrl = 'https://graph.threads.net/v1.0';
 
@@ -75,15 +75,26 @@ function get_latest_thread($accessToken, $apiBaseUrl) {
     ]);
     $urlWithParams = $url . '?' . $params;
 
-    $ch = curl_init($urlWithParams);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, [
-        "Authorization: Bearer $accessToken"
-    ]);
+    $options = [
+        'http' => [
+            'method' => 'GET',
+            'header' => "Authorization: Bearer $accessToken\r\n"
+        ]
+    ];
 
-    $response = curl_exec($ch);
-    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    curl_close($ch);
+    $context = stream_context_create($options);
+    $response = @file_get_contents($urlWithParams, false, $context);
+
+    // HTTP ステータスコードの取得
+    $httpCode = 0;
+    if (isset($http_response_header)) {
+        foreach ($http_response_header as $header) {
+            if (preg_match('#^HTTP/\d+\.\d+\s+(\d+)#', $header, $matches)) {
+                $httpCode = (int)$matches[1];
+                break;
+            }
+        }
+    }
 
     if ($httpCode === 200 && $response) {
         $data = json_decode($response, true);
@@ -96,7 +107,7 @@ function get_latest_thread($accessToken, $apiBaseUrl) {
         return;
     } else {
         header('Content-Type: text/plain; charset=utf-8');
-        echo "投稿の取得に失敗: " . $response;
+        echo "投稿の取得に失敗: " . ($response ?: 'No response');
         return null;
     }
 }
