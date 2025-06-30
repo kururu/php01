@@ -25,7 +25,7 @@ function loadEnv($filePath) {
 
 $accessToken = getenv('ACCESS_TOKEN');
 
-//echo $accessToken;
+echo $accessToken;
 
 $apiBaseUrl = 'https://graph.threads.net/v1.0';
 
