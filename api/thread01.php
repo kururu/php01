@@ -32,15 +32,27 @@ $apiBaseUrl = 'https://graph.threads.net/v1.0';
 function get_user_id($accessToken, $apiBaseUrl) {
     $url = $apiBaseUrl . '/me';
 
-    $ch = curl_init($url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, [
-        "Authorization: Bearer $accessToken"
-    ]);
+    // HTTPヘッダーを指定
+    $options = [
+        'http' => [
+            'method'  => 'GET',
+            'header'  => "Authorization: Bearer $accessToken\r\n"
+        ]
+    ];
 
-    $response = curl_exec($ch);
-    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    curl_close($ch);
+    $context = stream_context_create($options);
+    $response = @file_get_contents($url, false, $context); // @で警告非表示
+
+    // HTTPステータスコードを取得（$http_response_header を利用）
+    $httpCode = 0;
+    if (isset($http_response_header)) {
+        foreach ($http_response_header as $header) {
+            if (preg_match('#^HTTP/\d+\.\d+\s+(\d+)#', $header, $matches)) {
+                $httpCode = (int)$matches[1];
+                break;
+            }
+        }
+    }
 
     if ($httpCode === 200 && $response) {
         $data = json_decode($response, true);
@@ -53,7 +65,7 @@ function get_user_id($accessToken, $apiBaseUrl) {
 
 // 実行例
 $userId = get_user_id($accessToken, $apiBaseUrl);
-//echo "User ID: " . $userId;
+echo "User ID: " . $userId;
 
 function get_latest_thread($accessToken, $apiBaseUrl) {
     $url = $apiBaseUrl . '/me/threads';
