@@ -1,5 +1,5 @@
 <?php
-$rssUrl = "https://note.com/kururu01/m/m417488290466/rss";
+$rssUrl = "https://note.com/kururu01/rss";
 
 // RSSフィードを取得
 $rssContent = @file_get_contents($rssUrl);
