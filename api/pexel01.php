@@ -83,6 +83,7 @@ $result = [];
 foreach ($data['photos'] as $photo) {
     $result[] = [
         'url' => $photo['url'],
+        'url01' => $photo['url'],
         'photographer' => $photo['photographer'],
         'original'     => $photo['src']['original'],
     ];
@@ -95,6 +96,7 @@ $random_number = rand(0, ($num - 1));
 if (!isset($result[$random_number])) {
     $result[$random_number] = [
         "url" => "https://www.pexels.com/photo/brown-rocks-during-golden-hour-2014422/",
+        "url01" => "https://www.pexels.com/photo/brown-rocks-during-golden-hour-2014422/",
         "photographer" => "@Joey Farina",
         "original" => "https://images.pexels.com/photos/2014422/pexels-photo-2014422.jpeg"
     ];
