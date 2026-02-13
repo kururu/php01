@@ -1,8 +1,5 @@
 <?php
 $apiKey = getenv('NEWS_API');
-if (!$apiKey) {
-    die('API KEY NOT FOUND');
-}
 
 $url = 'https://newsapi.org/v2/top-headlines?' . http_build_query([
     'sources' => 'bbc-news',
@@ -11,7 +8,9 @@ $url = 'https://newsapi.org/v2/top-headlines?' . http_build_query([
 
 $context = stream_context_create([
     'http' => [
-        'ignore_errors' => true
+        'method' => 'GET',
+        'header' => "User-Agent: MyNewsApp/1.0\r\n",
+        'ignore_errors' => true,
     ]
 ]);
 
@@ -25,8 +24,9 @@ if (!isset($data['articles'][0])) {
 
 $article = $data['articles'][0];
 
+header('Content-Type: application/json; charset=utf-8');
 echo json_encode([
     'title'     => $article['title'],
-    'thumbnail' => $article['urlToImage']
+    'thumbnail' => $article['urlToImage'],
 ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 ?>
