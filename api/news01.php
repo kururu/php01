@@ -15,19 +15,18 @@ $context = stream_context_create([
     ]
 ]);
 
-$data = file_get_contents($url, false, $context);
-$article = $data['articles'][0] ?? null;
+$response = file_get_contents($url, false, $context);
+$data = json_decode($response, true);
 
-if (!$article) {
-    echo json_encode(['error' => 'no articles'], JSON_UNESCAPED_UNICODE);
+if (!isset($data['articles'][0])) {
+    echo json_encode(['error' => 'no articles', 'debug' => $data]);
     exit;
 }
 
-$output = [
-    'title'     => $article['title'] ?? '',
-    'thumbnail' => $article['urlToImage'] ?? '',
-];
+$article = $data['articles'][0];
 
-header('Content-Type: application/json; charset=utf-8');
-echo json_encode($output, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+echo json_encode([
+    'title'     => $article['title'],
+    'thumbnail' => $article['urlToImage']
+], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 ?>
