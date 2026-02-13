@@ -6,11 +6,9 @@ if (!$apiKey) {
 }
 
 // NewsAPI（BBCの記事を含む例）
-$url = 'https://newsapi.org/v2/everything?' . http_build_query([
-    'domains' => 'bbc.co.uk',
-    'language' => 'en',
-    'pageSize' => 10,
-    'apiKey' => $apiKey,
+$url = 'https://newsapi.org/v2/top-headlines?' . http_build_query([
+    'sources' => 'bbc-news',
+    'apiKey'  => $apiKey,
 ]);
 
 $ch = curl_init($url);
