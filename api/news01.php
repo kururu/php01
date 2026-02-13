@@ -5,6 +5,8 @@ if (!$apiKey) {
     exit('API key not set');
 }
 
+echo "aaa";
+
 // NewsAPI（BBCの記事を含む例）
 $url = 'https://newsapi.org/v2/top-headlines?' . http_build_query([
     'sources' => 'bbc-news',
