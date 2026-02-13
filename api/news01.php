@@ -9,8 +9,5 @@ $url = 'https://newsapi.org/v2/top-headlines?' . http_build_query([
 $response = file_get_contents($url);
 $data = json_decode($response, true);
 
-foreach ($data['articles'] as $article) {
-    echo $article['title'] . PHP_EOL;
-    echo $article['urlToImage'] . PHP_EOL;
-}
+var_dump($data);
 ?>
