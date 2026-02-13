@@ -28,5 +28,6 @@ header('Content-Type: application/json; charset=utf-8');
 echo json_encode([
     'title'     => $article['title'],
     'thumbnail' => $article['urlToImage'],
+    'url' => $article['url']
 ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 ?>
